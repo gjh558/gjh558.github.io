@@ -142,9 +142,22 @@
 
 5. **enabel_shared_from_this**
 
-   - 应用场景：需要返回智能指针保护的`this`时使用。
-   - How to use
-
+   - 应用场景：需要返回智能指针管理的`this`时使用。注意只有堆上（使用shared_ptr管理）的对象才能使用`shared_from_this`。
+   - How to use ?
+     ```cpp
+     class Base {
+      public:
+       shared_ptr<Base> get_self() {
+         return shared_from_this();
+       }
+     };
+     
+     int main() {
+       shared_ptr<Base> ptr(nwe Base()); // ptr use count is 1
+       auto ptr2 = ptr->get_slef(); // ptr and ptr2 use count is both 2
+       return 0;
+     }
+     ```
 
 
 ## 2. Lambda
