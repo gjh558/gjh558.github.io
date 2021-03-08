@@ -145,7 +145,7 @@
    - 应用场景：需要返回智能指针管理的`this`时使用。注意只有堆上（使用shared_ptr管理）的对象才能使用`shared_from_this`。
    - How to use ?
      ```cpp
-     class Base {
+     class Base : public std::enable_shared_from_this<Base> {
       public:
        shared_ptr<Base> get_self() {
          return shared_from_this();
