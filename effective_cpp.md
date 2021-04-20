@@ -1,5 +1,7 @@
 # C++ 要点记录
 
+[toc]
+
 ## 1. 智能指针
 
 > 智能指针是要管理不能自动释放的内存，也就是堆上的内存，对于栈上的内存不要使用智能指针！会崩溃。
@@ -123,7 +125,10 @@
 
    - 实现
 
+     ```c++
      // TODO
+     
+     ```
 
      
 
@@ -142,22 +147,23 @@
 
 5. **enabel_shared_from_this**
 
-   - 应用场景：需要返回智能指针管理的`this`时使用。注意只有堆上（使用shared_ptr管理）的对象才能使用`shared_from_this`。
-   - How to use ?
-     ```cpp
-     class Base : public std::enable_shared_from_this<Base> {
-      public:
-       shared_ptr<Base> get_self() {
-         return shared_from_this();
+   - 应用场景：需要返回智能指针保护的`this`时使用。
+
+   - How to use？ 对象必须是一个`shared_ptr`管理的堆上对象
+
+     ```c++
+     struct Widget : public std::enable_shared_from_this<Widget>{
+       std::shared_ptr get_self() {
+         return std::shared_from_this();
        }
      };
      
-     int main() {
-       shared_ptr<Base> ptr(nwe Base()); // ptr use count is 1
-       auto ptr2 = ptr->get_slef(); // ptr and ptr2 use count is both 2
-       return 0;
-     }
+     // main
+     std::shared_ptr<Widget> sp = make_shared<Widget>();
+     auto self = sp->get_self(); // use_count of sp and self is 2
+     
      ```
+
 
 
 ## 2. Lambda
@@ -168,27 +174,297 @@
 
 3. 避免default capture instead of specify vars explicitly
 
-4. 如何`move` object 进行捕获，c++14支持
+4. 如何`move` object 进行捕获，c++14才能支持`init capture`，c++11中只能使用`bind`
 
 5. lambda与bind的区别
 
-    
-
    - 占用空间
 
-   - 何时计算参数
+     - Lambda，没有捕获不占空间，有捕获就看捕获变量的大小
 
-   - bind的函数有重载时
+    - 何时计算参数
 
-     ```cpp
-     // TODO:
-     
-     ```
+      - bind的参数是在编译期间计算出来的，而lambda内部调用的函数参数则是在调用实际发生时才计算。
 
-     
+        ```cpp
+        // timer will be triggered at current_time + after
+        
+        // lambda
+         // will be calculated when user call set_timer
+        auto set_timer = [](int after) {
+          alarm(steady_clock::now() + after);
+        };
+        
+        // bind
+        // will be calculated when compile!
+        auto set_timer = bind(alarm, steady_clock::now() + after);
+        ```
+
+        
+
+    - bind的函数有重载时，尤其是参数个数不同时。由于bind的只有一个函数名，参数作为内部实现类的成员，编译器不知道该名字具体是哪个重载函数。
+
+      ```cpp
+      // TODO:
+      
+      
+      ```
+
+   6. 综上所述，应该优先使用lambda。但是有时候bind有自己的优势：
+
+   - C++11还不支持`move capture`，所以需要使用bind来实现
+   - 多态函数。bind内部使用完美转发(std::forward)来传递参数，可以应对参数类型的重载。但是c++11的lambda却需要再定义时指定参数类型（C++14可以用auto）。
 
 ## 3. 类型推导
 
+1. 模板参数推导
 
+   我们使用下面的code来说明类型推导的规则,`ParamType`通常会带有CV和引用/指针等修饰。
+
+   ```c++
+   template<typename T>
+   void f(ParamType param);
+   
+   // 调用
+   f(expr)
+   ```
+
+   - ParamType是引用或指针
+
+     - 忽略`expr`的引用/指针属性，然后再匹配ParamType来决定T
+
+       ```c++
+       f1(const T &param);
+       f2(T &param);
+       
+       int x = 10;
+       const int cx = x;
+       const int &rx = x;
+       
+       
+       ```
+
+       
+
+   - ParamType是universal reference `T&& param`
+
+     - 如果expr是lvalue，paramtype是一个左值引用
+     - 如果expr是rvalue，适用上面（paramtype是引用）的规则：忽略引用进而进行匹配
+
+     ParamType不是指针或引用，形式是pass by value
+
+     - 这种形式表示想要传递一份copy
+     - 忽略expr的引用属性
+     - 忽略cv属性
+
+     ```c++
+     
+     ```
+
+     expr是数组！
+
+     - 如果是pass by value `f(T param)`, 推导成指针
+
+     - 如果是pass by ref `f(T& param)`, 推导成数组！利用此规则可以写一个函数获取数组大小
+
+       ```c++
+       template<typename T, size_t N>
+       constexpr size_t array_size(T (&)[N])
+       {
+         return N;
+       }
+       ```
+
+   - expr是函数的情况与数组一致
+
+   
+
+2. auto 推导
+
+   - 与template推导不同的是，如果用`{}`来初始化 `auto`声明的变量，推导成`initializer_list`，推导包括两步，一个是把{}推导成初始化列表，第二就是由于初始化列表是模板，还需要推导模板参数
+
+   - C++14中，auto作为函数返回值或者lambda参数时，如果使用{}，会推导失败
+
+   - auto对于不可见的proxy class不能预期工作
+
+     `vector<bool>`
+
+     
+
+3. decltype
+
+   - 总是会返回你认为的类型
+   - 对于左值表达式`vector[index]`，decltype 返回T&类型
 
 ## 4. 并发编程
+
+- 优先使用而非，因为STL会帮你做一些调度优化，不会一味的创建新线程，当然你也可以使用launch policy让async总是创建新线程
+
+- launch policy
+
+  - std::launch::async :  立刻在新线程中执
+  - std::launch::deferred：直到调用get/wait才会执行，不一定在新线程中
+  - default设置是 OR，交给C++自己决定如何调度
+
+- d
+
+  
+
+ 
+
+## 5. C++11特性
+
+#### `{}`与`()`初始化
+
+1. `{}`
+
+   - 防止类型narrowing。`int a{1.0}; // WRONG`
+
+   - 可以就地初始化非静态成员，注意不能使用`=`
+
+   - 防止`most vexing parse`，也就是把`Widget w()` 解析成函数声明
+
+   - 构造函数解析：
+
+     - 如果构造 函数有使用`initialize_list`做参数的重载，当使用`{}`时，会优先使用该构造函数，除非实在是类型不匹配！
+
+     - vector有多个构造函数，如何选择使用 `()`或`{}` ?
+
+       ```c++
+       vector<int> v1(10); // a vector with 10 elements, v1.size() == 10
+       vector<int> v2{10}; // a vector with 1 elements, v1.size() == 1
+       vector<int> v3(10, 20); // a vector with 10 elements with same value 20, v1.size() == 10
+       vector<int> v4{10, 20}; // a vector with 2 elements, v1.size() == 2
+       ```
+
+2. Edge Case
+
+   ```c++
+   class Widget {
+    public:
+     Widget(){}
+     Widget(std::initialize_list<int> l) {}
+   };
+   
+   int main() {
+     Widget w{}; // Will call default constructor
+     Widget w({}); // will call initialize_list constructor
+     Widget w{{}}; // will call initialize_list constructor
+   }
+   ```
+
+   
+
+#### nullptr
+
+使用`0`或者`NULL`会在重载解析是遇到问题：永远不会使用void*的重载。
+
+```c++
+func(int);
+func(void* );
+```
+
+#### `using` and `typedef`
+
+- `typedef` 不能支持模板化，`using`可以
+- 在模板type traits中通常要使用`typename T::type`，使用`using`则很直接
+
+#### scopped enum
+
+Both scoped and unstopped enum can specify underlying type
+
+#### 一些新加的关键字
+
+##### 1. deleted / default
+
+关注`deleted` 与 `private`的区别：private函数需要实现！
+
+所有的函数都可以`deleted`，即使不是成员函数
+
+#####2. override
+
+#####3. final
+
+方便编译器优化
+
+#####4. 成员函数后面的`&`, `&&`
+
+##### 5. constexpr
+
+- 是否在编译期间估值视情况而定，实在不行就当成普通函数
+- C++11中，`constexpr`成员函数默认是`const`的，不能修改`this`
+- C++11中，如果return `void`，也不可以是constexpr，因为void不是`litreal type`
+
+##### 6. 编译器生成的函数
+
+part-1：
+
+- C++98 copy constructor 与copy assignment operator相互独立，定义其中一个不会影响编译器生成另外一个
+
+- move construtor与moveassignment operator会相互影响
+
+- 如果你声明了任何一个copy操作，编译器都不会生成move操作
+
+- 如果你声明 move操作，编译器也不会生成copy操作
+
+- Rule of Three
+
+  part-2
+
+- 编译器在三种情况下会生成move 操作
+
+  - 没有自定义copy
+  - 没有自定义move
+  - 没有自定义析构函数
+
+- 总结一下 C++11中的规则
+
+  • Default constructor: Same rules as C++98. Generated only if the class contains
+  no user-declared constructors.
+  • Destructor: Essentially same rules as C++98; sole difference is that destructors
+  are noexcept by default (see Item 14). As in C++98, virtual only if a base class
+  destructor is virtual.
+  • Copy constructor: Same runtime behavior as C++98: memberwise copy con‐
+  struction of non-static data members. Generated only if the class lacks a userdeclared copy constructor. Deleted if the class declares a move operation.
+  Generation of this function in a class with a user-declared copy assignment oper‐
+  ator or destructor is deprecated.
+  • Copy assignment operator: Same runtime behavior as C++98: memberwise
+  copy assignment of non-static data members. Generated only if the class lacks a
+  user-declared copy assignment operator. Deleted if the class declares a move
+  operation. Generation of this function in a class with a user-declared copy con‐
+  structor or destructor is deprecated
+
+  • Move constructor and move assignment operator: Each performs memberwise
+  moving of non-static data members. Generated only if the class contains no userdeclared copy operations, move operations, or destructor.
+
+  • Member function templates never suppress generation of special member
+  functions.
+
+# 一些技巧
+
+1. 如果无法避免copy，而且又可以move，在传递参数时可以传value。
+
+   有一些函数你不确定传的是lvalue还是rvalue，但是又想前者copy后者move，这时候就可以`pass by value`，否则就要写两个重载方法
+
+   ```c++
+   class Widget {
+    public:
+     void AddName(std::string name) {
+       name_ = std::move(name);
+     }
+   };
+   
+   Widget w;
+   w.AddName("Jim"); // rvalue
+   
+   std::string name{"Green"};
+   w.AddName(name); // lvalue
+   ```
+
+   **Consider pass by value only for copyable parameters.**
+
+   **Consider pass by value only for parameters that are always copied.**
+
+   **Pass by value only for parameters that are cheap to move**
+
+2. 尽可能使用`emplace`而非`insert` ，就地构造
