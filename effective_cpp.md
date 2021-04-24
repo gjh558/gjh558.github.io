@@ -298,16 +298,37 @@
 
 ## 4. 并发编程
 
-- 优先使用而非，因为STL会帮你做一些调度优化，不会一味的创建新线程，当然你也可以使用launch policy让async总是创建新线程
+- 大多数情况下优先使用`std::async`而非`std::thread`，因为STL会帮你做一些调度优化，不会一味的创建新线程，当然你也可以使用launch policy让async总是创建新线程
 
 - launch policy
-
   - std::launch::async :  立刻在新线程中执
   - std::launch::deferred：直到调用get/wait才会执行，不一定在新线程中
   - default设置是 OR，交给C++自己决定如何调度
 
-- d
-
+- 何时可以使用默认的policy去执行一个task？
+  - task不需要与调用`get` `wait`的线程并行
+  - `wait_for`或者`wait_until`会检查defer状态
+  - 一定会在`future`调用`get`或`wait`(其实就是让task执行)，或者不在乎task是否执行
+  对于`wait_for`，它不会导致task被执行，所以如果不检查defer状态，可能导致bug：
+  ```
+  auto future = std::async(f);
+  while (std::wait_for(100ms) != std::future_status::ready) // May nerver exit the loop
+  {
+   continue;
+  }
+  
+  // TO FIX IT
+  if (future.wait_for(0) == std::future_status::deferred)
+  {
+   future.wait(); // will let task go
+  } else {
+   while (std::wait_for(100) != std::future_status::ready) ...
+  }
+  ```cpp
+  
+  - 调用一个joinable 线程的析构函数（内部会detach和join）将导致进程退出。你应该join 或者 detach这个线程
+  - `std::future`工作原理：caller <---- shared states (heap) <---- callee
+  - `std::future`的析构函数一般只会销毁自己的数据成员，如果它是是最后一个引用async non-deferred task 的shared states的future，它析构函数会阻塞直到线程结束
   
 
  
