@@ -297,7 +297,14 @@
    - 对于左值表达式`vector[index]`，decltype 返回T&类型
 
 ## 4. 并发编程
+### 4.1 c++11提供的并发编程工具
+Reference: https://baptiste-wicht.com/posts/2017/09/cpp11-concurrency-tutorial-futures.html
+1. `std::lock_guard`和`std::unique_lock`的区别
+   - 条件变量必须使用`std::unique_lock`
+   - `std::unique_lock`拥有更过的API和构造函数，可以指定在构造时不lock，可以unlock等更丰富的功能。
+3. 学会使用`recursive_mutex`, `timed_mutex`, `call_once`, `condition_variable` `atomic<T>`等组件，以及相应的API`try_lock`, `try_lock_for`等
 
+### 4.2 Other Points
 - 大多数情况下优先使用`std::async`而非`std::thread`，因为STL会帮你做一些调度优化，不会一味的创建新线程，当然你也可以使用launch policy让async总是创建新线程
 
 - launch policy
