@@ -331,12 +331,11 @@ Reference: https://baptiste-wicht.com/posts/2017/09/cpp11-concurrency-tutorial-f
   } else {
    while (std::wait_for(100) != std::future_status::ready) ...
   }
-  ```cpp
+  ```
   
-  - 调用一个joinable 线程的析构函数（内部会detach和join）将导致进程退出。你应该join 或者 detach这个线程
+  - 调用一个joinable 线程的析构函数（内部会detach和join）将导致进程退出。你应该join 或者 detach这个线程, 如果不join直接调用结束就会崩溃
   - `std::future`工作原理：caller <---- shared states (heap) <---- callee
   - `std::future`的析构函数一般只会销毁自己的数据成员，如果它是是最后一个引用async non-deferred task 的shared states的future，它析构函数会阻塞直到线程结束
-  
 
  
 
