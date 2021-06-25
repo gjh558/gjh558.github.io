@@ -79,4 +79,7 @@
 - 智能指针
 - regx
 - 并发编程
-  - 
+ 
+### 原始字符串字面量
+`string s = R"hell\\you";`
+- 可以自定义字面量，重载"", `std::string operator"" _w(const char *w, size_t len) { return string(w) + ",";}`
