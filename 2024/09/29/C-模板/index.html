@@ -1,0 +1,201 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>金河的开发笔记</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel = "icon" href =  "https://i.pinimg.com/originals/4a/a5/df/4aa5df83115df6c96732a2d76ccb4f1b.jpg" type = "image/x-icon"> 
+    
+<link rel="stylesheet" href="/css/styles.css">
+ 
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <link rel = "icon" href =  "https://i.pinimg.com/originals/4a/a5/df/4aa5df83115df6c96732a2d76ccb4f1b.jpg" type = "image/x-icon"> 
+<nav id="nav">
+  <header class="header">
+    <a href="/" class="header-title">
+      金河的开发笔记 <i class="fa fa-fire" aria-hidden="true"></i>
+    </a>
+    
+  </header>
+
+  
+
+  <div class="nav-wrapper">
+    <div class="menu">
+      <a href="/" class="nav-menu z-active">HOME</a>
+      <a href="/about" class="nav-menu">ABOUT</a>
+      <a href="/archives" class="nav-menu">ARCHIVE</a>
+    </div>
+
+    <div class="icons">
+      <a target="_blank" rel="noopener" href="https://github.com/gjh558" class="nav-icon" >
+        <i class="fa fa-github-alt" aria-hidden="true"></i>
+      </a>
+      <a href="" class="nav-icon">
+        <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+      </a>
+      <a href="" class="nav-icon">
+        <i class="fa fa-facebook-square" aria-hidden="true"></i>
+      </a>
+    </div>
+
+    
+  </div>
+</nav>
+    
+<!-- <hr class="hr-divide-header" align="left"> -->
+
+      <a name="top"></a>
+
+<section class="article">  
+  <h2 class="article-title">
+    C++ 模板基础 
+  </h2>
+  <p class="article-date">
+    2024/9/29 
+  </p>
+
+  <hr class="hr-divide">
+
+  <div class="article-content">
+    <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+<ul>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%AE%9A%E4%B9%89">模板的定义</a><ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF">函数模板</a><ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%85%A8%E7%89%B9%E5%8C%96">函数模板的全特化</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%81%8F%E7%89%B9%E5%8C%96">函数模板的偏特化</a></li>
+</ul>
+</li>
+<li><a href="#%E7%B1%BB%E6%A8%A1%E6%9D%BF">类模板</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E6%A8%A1%E6%9D%BF">变量模板</a></li>
+<li><a href="#%E5%88%AB%E5%90%8D%E6%A8%A1%E6%9D%BF">别名模板</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0">模板模板参数</a></li>
+<li><a href="#%E5%8F%98%E5%8F%82%E6%A8%A1%E6%9D%BF">变参模板</a><ul>
+<li><a href="#%E9%9D%9E%E7%B1%BB%E5%9E%8B%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0">非类型模板参数</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0%E7%9A%84%E9%87%8D%E8%BD%BD">模板函数的重载</a><ul>
+<li><a href="#%E5%BD%93%E6%A8%A1%E6%9D%BF%E9%81%87%E5%88%B0%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0">当模板遇到构造函数</a></li>
+<li><a href="#%E5%BD%93%E6%A8%A1%E6%9D%BF%E9%81%87%E5%88%B0%E8%99%9A%E5%87%BD%E6%95%B0">当模板遇到虚函数</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%BB%84%E7%BB%87">代码组织</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+<!-- /code_chunk_output -->
+
+
+<h2 id="模板的定义"><a href="#模板的定义" class="headerlink" title="模板的定义"></a>模板的定义</h2><h3 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">T <span class="title">add</span><span class="params">(T a, T b)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用时不必显示指定参数类型，编译器会进行自动推导，至于参数类型推导规则，不需死记硬背，只需记住<strong>会根据形参类型cvr和实参cvr类型</strong>来决定最终的T是什么，都会符合你的直觉！这有几个例子：</p>
+<ul>
+<li><code>void print(const T&amp; param); int a = 10; int &amp;b = a; print(a); print(b)</code> T 都是 <code>int</code>, 这里的<code>param</code> 的语意是 <strong>const 引用</strong>，推导的时候会保持这一语意。</li>
+<li><code>void print(T param);</code> param 的含义是T类型参数的拷贝，不管传入什么，推导出的类型都不带<code>cvr</code></li>
+<li><code>void print(T&amp;&amp; param);</code> param 是万能引用，能保持传入参数的<code>cvr</code>和左值（右值）性，下面会详细介绍万能引用。</li>
+</ul>
+<p>另外有两个特例，传入的是函数和数组会怎么样？</p>
+<ul>
+<li><strong>函数</strong>， 如果是 <code>T param</code>, 则是函数指针, 如果是<code>T&amp; param</code>或者<code>T&amp;&amp; param</code> 就是函数引用 <code>void(&amp;)(void)</code></li>
+<li><strong>数组</strong>， 如果是 <code>T param</code>, 则是指针, 如果是<code>T&amp; param</code>或者<code>T&amp;&amp; param</code> 就是数组引用 <code>int(&amp;)[10]</code></li>
+</ul>
+<blockquote>
+<p>Question: 如何获得数组的大小 ？<br>template&lt;typename T, size_t N&gt;<br>size_t arr_size(T(&amp;)[N]) { return N; }</p>
+</blockquote>
+<h4 id="函数模板的全特化"><a href="#函数模板的全特化" class="headerlink" title="函数模板的全特化"></a>函数模板的全特化</h4><p>所谓全特化，就是你来显示的指定模板所用的参数，而不是让编译器去推导，所以模板函数的全特化版本不再需要模板参数，只需要让编译器知道这是一个模板的全特化版本就可以了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(T a, U b)</span></span>; <span class="comment">// no need to define it if we don&#x27;t use it</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">int</span> a, <span class="type">double</span> b)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d, %f\n&quot;</span>, a, b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="type">void</span> <span class="built_in">print</span>&lt;<span class="type">char</span>, <span class="type">char</span>&gt;(<span class="type">char</span> a, <span class="type">char</span> b) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="函数模板的偏特化"><a href="#函数模板的偏特化" class="headerlink" title="函数模板的偏特化"></a>函数模板的偏特化</h4><p>函数模板不能偏特化!!!</p>
+<h3 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h3><p>类模板是有偏特化的，而且偏特化非常有用，在STL中大量使用，这里我们只展示如何写，至于实际的使用放在后面。与函数模板不同，在使用类模板时必须显示指定类型参数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Value</span> &#123;</span><br><span class="line">	<span class="keyword">using</span> value_type = T;</span><br><span class="line">	T value1;</span><br><span class="line">	U value2;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Value&lt;<span class="type">int</span>, <span class="type">double</span>&gt; v;</span><br></pre></td></tr></table></figure>
+
+<p>全特化</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Value</span>&lt;<span class="type">int</span>, <span class="type">double</span>&gt; &#123;</span><br><span class="line">	<span class="built_in">Value</span>() &#123;</span><br><span class="line">     	<span class="built_in">printf</span>(<span class="string">&quot;generic\n&quot;</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>偏特化</p>
+<ul>
+<li>参数个数的偏特化，例如原来的两个变成一个</li>
+<li>参数范围的偏特化，例如原来的<code>T</code>变成<code>T*</code><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 参数个数</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Value</span>&lt;T, <span class="type">char</span>&gt; &#123;</span><br><span class="line">	<span class="built_in">Value</span>() &#123;</span><br><span class="line">     	<span class="built_in">printf</span>(<span class="string">&quot;specific number\n&quot;</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 参数范围</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Value</span>&lt;T, U*&gt; &#123;</span><br><span class="line">	<span class="built_in">Value</span>() &#123;</span><br><span class="line">     	<span class="built_in">printf</span>(<span class="string">&quot;specific scope\n&quot;</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="变量模板"><a href="#变量模板" class="headerlink" title="变量模板"></a>变量模板</h3><p>这个比较少见，是C++14引入的, 一般这种变量模板需要定义在全局空间或者命名空间中。语法是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T a&#123;&#125;</span><br><span class="line"></span><br><span class="line">a&lt;<span class="type">int</span>&gt; = <span class="number">10</span>;</span><br><span class="line">a&lt;<span class="type">double</span>&gt; = <span class="number">10.0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 也可以这样</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="type">char</span> c&#123;&#125;;</span><br><span class="line">c&lt;<span class="type">int</span>&gt; = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">c&lt;<span class="type">double</span>&gt; = <span class="string">&#x27;b&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>上述代码会在全局空间实例化成两个不同类型不同名字的变量 <code>int a</code> 与 <code>double a</code>。</p>
+<h3 id="别名模板"><a href="#别名模板" class="headerlink" title="别名模板"></a>别名模板</h3><p>感谢c++11，现在我们可以给模板起一个名字了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> IntMap = std::map&lt;<span class="type">int</span>, T&gt;;</span><br><span class="line"></span><br><span class="line">IntMap&lt;std::string&gt; m;</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板模板参数"><a href="#模板模板参数" class="headerlink" title="模板模板参数"></a>模板模板参数</h2><p>假定一个类是一个数据的容器，这个类既可以用list也可以用vector来作为底层的存储容器，那应该怎么写呢？？<br>我们应该让 vector&#x2F;list 作为模板参数，那是否应该这样写呢？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Store</span> &#123;</span><br><span class="line">	C&lt;T&gt; storage;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>No，问题在于编译器不知道C是一个模板，那么怎么才能让他成为模板呢，显示的告诉编译器就好了：Container 是一个类型，所以用class修饰（c++17可以用typename修饰），Container又是一个模板类还需要添上template修饰，由于这个template里面的参数用不到，所以这里省略了名字。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>...&gt; <span class="keyword">class</span> <span class="title class_">Container</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Store</span> &#123;</span><br><span class="line">	Container&lt;T&gt; storage;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="变参模板"><a href="#变参模板" class="headerlink" title="变参模板"></a>变参模板</h2><p><strong>形式:</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;generic version&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际开发中使用变参模板的场景是<strong>完美转发</strong>，将传入参数原封不动的传递给其他函数。</p>
+<p><strong>变参的展开：</strong><br>使用递归的方式展开，如果是变参模板类，可以使用继承递归或者组合递归的方式，无论哪种方式，都需要一个递归终止的条件也就是特化版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(Args... args)</span></span>; <span class="comment">// 不需要定义，因为没有调用这个模板</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 偏特化版本</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(First f, Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;generic: %d\n&quot;</span>, f);</span><br><span class="line">    <span class="built_in">print</span>(args...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;specific\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/****</span></span><br><span class="line"><span class="comment"> * Output</span></span><br><span class="line"><span class="comment"> ****/</span></span><br><span class="line"><span class="comment">// generic: 1</span></span><br><span class="line"><span class="comment">// generic: 2</span></span><br><span class="line"><span class="comment">// generic: 3</span></span><br><span class="line"><span class="comment">// generic: 4</span></span><br><span class="line"><span class="comment">// generic: 5</span></span><br><span class="line"><span class="comment">// specific</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>大家可以思考一下如果是类模板应该怎么展开 ？<br>下面展示了用递归继承的方式进行展开</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 主模板定义</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Others&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="built_in">A</span>() &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;generic\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 偏特化</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>&lt;First, Others...&gt; : <span class="keyword">private</span> A&lt;Others...&gt; &#123;</span><br><span class="line">    <span class="built_in">A</span>() &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;specific: %s\n&quot;</span>, <span class="built_in">typeid</span>(First).<span class="built_in">name</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  A&lt;<span class="type">int</span>, <span class="type">double</span>, <span class="type">float</span>, <span class="type">char</span>&gt; a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的<code>private</code>继承本身有 has-a 的含义，所以其实用递归组合的方式也是一样的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>&lt;First, Others...&gt; &#123;</span><br><span class="line">    <span class="built_in">A</span>() &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;specific: %s\n&quot;</span>, <span class="built_in">typeid</span>(First).<span class="built_in">name</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    A&lt;Others...&gt; a;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="非类型模板参数"><a href="#非类型模板参数" class="headerlink" title="非类型模板参数"></a>非类型模板参数</h3><p>只有能准确确定值的常量才能作为模板参数，比如整型，指针值。不能作为模板参数的例子：</p>
+<ul>
+<li>全局指针<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="type">const</span> <span class="type">char</span>* p&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* global_p =  <span class="string">&quot;hello tmpl&quot;</span>;</span><br><span class="line"></span><br><span class="line">A&lt;global_p&gt; a; <span class="comment">// Wrong</span></span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">char</span> global_arr[] = <span class="string">&quot;hello tmpl&quot;</span>;</span><br><span class="line">A&lt;global_arr&gt; b; <span class="comment">// Correct</span></span><br></pre></td></tr></table></figure></li>
+<li>字符串常量</li>
+<li>浮点数<br>由于浮点数不精确，无法确定两个类型是否是相同的</li>
+</ul>
+<h2 id="模板函数的重载"><a href="#模板函数的重载" class="headerlink" title="模板函数的重载"></a>模板函数的重载</h2><p>当选择函数时，如果都符合条件，编译器选择的优先顺序是： <strong>普通函数 –&gt; 特化函数 –&gt; 模板函数</strong>。</p>
+<h3 id="当模板遇到构造函数"><a href="#当模板遇到构造函数" class="headerlink" title="当模板遇到构造函数"></a>当模板遇到构造函数</h3><p>对于普通的构造函数重载，没什么特殊性，遵循上述的选择顺序即可。但是对于<strong>拷贝构造函数</strong> 就有点特殊了，很可能与你的直觉不一致，看个例子</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="title">A</span><span class="params">(T i)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;template constructor\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="title">A</span><span class="params">(<span class="type">const</span> A&lt;T&gt;&amp; other)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;template copy constructor\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> i) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;normal constructor\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A&amp;) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;normal copy construtor\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function">A&lt;<span class="type">int</span>&gt; <span class="title">a</span><span class="params">(<span class="number">10</span>)</span></span>; <span class="comment">// normal constructor</span></span><br><span class="line">  <span class="function">A&lt;<span class="type">int</span>&gt; <span class="title">b</span><span class="params">(<span class="number">1.0</span>)</span></span>; <span class="comment">// template constructor</span></span><br><span class="line"></span><br><span class="line">  <span class="function">A&lt;<span class="type">int</span>&gt; <span class="title">c</span><span class="params">(<span class="number">1</span>)</span></span>; <span class="comment">// normal constructor</span></span><br><span class="line">  A&lt;<span class="type">int</span>&gt; d = c; <span class="comment">// normal copy construtor</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong></p>
+<ul>
+<li>拷贝构造函数模板 <strong>不是</strong> 拷贝构造函数，拷贝赋值函数模板<strong>不是</strong>拷贝赋值函数，因为拷贝构造函数要求拷贝的对象类型完全相同，而模板则没有这样的要求。</li>
+<li>上面的代码中如果把一个<code>A&lt;double&gt;</code> 拷贝给一个<code>A&lt;int&gt;</code>，则会调用模板，因为类型不同</li>
+<li>如果把拷贝函数模板中的const去掉，则无论类型是否相同都会调用模板函数，<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="title">A</span><span class="params">(A&lt;T&gt;&amp; other)</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="当模板遇到虚函数"><a href="#当模板遇到虚函数" class="headerlink" title="当模板遇到虚函数"></a>当模板遇到虚函数</h3><ul>
+<li><strong>模板函数不能是虚函数</strong><br>在编译期间就要知道虚函数表的大小一边存储所有的虚函数，而模板函数只有在使用的时候才会进行实例化，也就是在所有的编译单元编译完成之前是不能知道有多少个实例的，这样一来要想确认虚函数的个数只有延迟到链接期，除非编译器支持，否则虚函数不能是模板</li>
+<li><strong>模板类可以包含虚函数</strong><br>类模板中的函数只有当被调用时才会实例化，但是虚函数一定会被实例化，无论是不是被调用。</li>
+</ul>
+<h2 id="代码组织"><a href="#代码组织" class="headerlink" title="代码组织"></a>代码组织</h2><p>原则就是 <strong>在使用模板时，一定要能够看到模板的完整定义，否则会导致链接错误</strong></p>
+<ul>
+<li>将模板的声明和定义都放在一个头文件里面。这是最标准的做法</li>
+<li>将模板的声明放在头文件，定义放在源文件，但是头文件的最后 <code>#include &quot;tmpl.cc&quot;</code></li>
+<li>如果模板类&#x2F;函数只在一个源文件使用，那可以将定义放在这个源文件里面</li>
+<li>特化版本可以放在源文件里面，因为链接的时候可以找到</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>本文主要讲述了下面的概念和示例：</p>
+<ul>
+<li>全特化</li>
+<li>偏特化</li>
+<li>变参模板</li>
+<li>模板模板参数</li>
+<li>模板函数重载，尤其是构造函数重载</li>
+<li>代码如何组织才能避免链接错误</li>
+</ul>
+ 
+    <hr class="hr-divide">
+    <div class="article-footer">
+      <a href="#top">back to top</a>
+    </div>
+  </div>
+
+  
+</section>  
+    </div>
+
+    <!-- After footer file to store js of Bootstrap -->
+  </body>
+
+</html>
