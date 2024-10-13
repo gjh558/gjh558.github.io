@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="STL中的常用模板及其简易实现 如何能够正确的编写模板  std::declval12template&lt;typename T&gt;add_rvalue_reference_t&lt;T&gt; declval() noexcept;  没有函数体定义，所以并不能独立调用，只可用与模板，decltype，sizeof中用于类型推导，占用内存大小的计算。add_rvalue_reference">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STL中的常用模板">
+<meta property="og:url" content="http://example.com/2024/10/03/C-STL%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="STL中的常用模板及其简易实现 如何能够正确的编写模板  std::declval12template&lt;typename T&gt;add_rvalue_reference_t&lt;T&gt; declval() noexcept;  没有函数体定义，所以并不能独立调用，只可用与模板，decltype，sizeof中用于类型推导，占用内存大小的计算。add_rvalue_reference">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-03T10:51:27.000Z">
+<meta property="article:modified_time" content="2024-10-13T08:07:14.526Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++ 模板">
+<meta property="article:tag" content="C++ 模板元编程">
+<meta property="article:tag" content="C++ 惯用法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/10/03/C-STL%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/10/03/C-STL%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/","path":"2024/10/03/C-STL常用模板/","title":"STL中的常用模板"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>STL中的常用模板 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#STL%E4%B8%AD%E7%9A%84%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF%E5%8F%8A%E5%85%B6%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">STL中的常用模板及其简易实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#std-declval"><span class="nav-number">1.1.</span> <span class="nav-text">std::declval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-true-type-std-false-type"><span class="nav-number">1.2.</span> <span class="nav-text">std::true_type ,std::false_type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-void-t"><span class="nav-number">1.3.</span> <span class="nav-text">std::void_t</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-conditional"><span class="nav-number">1.4.</span> <span class="nav-text">std::conditional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-remove-all-extents"><span class="nav-number">1.5.</span> <span class="nav-text">std::remove_all_extents</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-is-base-of-is-union-is-class"><span class="nav-number">1.6.</span> <span class="nav-text">std::is_base_of is_union is_class</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#is-copy-assignable"><span class="nav-number">1.7.</span> <span class="nav-text">is_copy_assignable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-integer-sequence"><span class="nav-number">1.8.</span> <span class="nav-text">std::integer_sequence</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%90%83%E5%8F%96%E6%8A%80%E6%9C%AF"><span class="nav-number">2.</span> <span class="nav-text">萃取技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E8%90%83%E5%8F%96"><span class="nav-number">2.1.</span> <span class="nav-text">迭代器萃取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%AE%B9%E5%99%A8%E5%86%85%E5%85%83%E7%B4%A0%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">获取容器内元素类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-remove-reference"><span class="nav-number">2.3.</span> <span class="nav-text">std::remove_reference</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#std-decay%E9%80%80%E5%8C%96"><span class="nav-number">2.4.</span> <span class="nav-text">std::decay退化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%BC%E8%90%83%E5%8F%96"><span class="nav-number">2.5.</span> <span class="nav-text">值萃取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#is-void"><span class="nav-number">2.5.1.</span> <span class="nav-text">is_void</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#is-same"><span class="nav-number">2.5.2.</span> <span class="nav-text">is_same</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#is-default-constructible"><span class="nav-number">2.5.3.</span> <span class="nav-text">is_default_constructible</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#is-convertible"><span class="nav-number">2.5.4.</span> <span class="nav-text">is_convertible</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#is-base-of"><span class="nav-number">2.5.5.</span> <span class="nav-text">is_base_of</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%90%83%E5%8F%96%EF%BC%88%E7%AD%96%E7%95%A5%E6%A8%A1%E6%9D%BF%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">算法萃取（策略模板）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/03/C-STL%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="STL中的常用模板 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STL中的常用模板
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-03 18:51:27" itemprop="dateCreated datePublished" datetime="2024-10-03T18:51:27+08:00">2024-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-13 16:07:14" itemprop="dateModified" datetime="2024-10-13T16:07:14+08:00">2024-10-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="STL中的常用模板及其简易实现"><a href="#STL中的常用模板及其简易实现" class="headerlink" title="STL中的常用模板及其简易实现"></a>STL中的常用模板及其简易实现</h2><blockquote>
+<p>如何能够正确的编写模板</p>
+</blockquote>
+<h3 id="std-declval"><a href="#std-declval" class="headerlink" title="std::declval"></a><code>std::declval</code></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">add_rvalue_reference_t</span>&lt;T&gt; <span class="title">declval</span><span class="params">()</span> <span class="keyword">noexcept</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>没有函数体定义，所以并不能独立调用，只可用与模板，decltype，sizeof中用于类型推导，占用内存大小的计算。add_rvalue_reference_t 使用了引用折叠技术。</p>
+<p><code>std::declval</code><strong>不通过构造函数</strong>声明一个类型的对象(不是定义一个对象)用于其他的模板技术中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;typeinfo&gt;</span><br><span class="line"></span><br><span class="line">struct A  &#123;</span><br><span class="line">  int func() &#123; return 0; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">  decltype(std::declval&lt;A&gt;().func()) num = 0;</span><br><span class="line">  std::cout &lt;&lt; typeid(num).name() &lt;&lt; std::endl; // i</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里顺便说一下<code>std::decltype</code>的用法，<code>std::decltype</code>可以通过变量，对象，表达式，函数名，函数指针，但不能是一个类型名。</p>
+<h3 id="std-true-type-std-false-type"><a href="#std-true-type-std-false-type" class="headerlink" title="std::true_type ,std::false_type"></a><code>std::true_type</code> ,<code>std::false_type</code></h3><p>谨记它们是<strong>类型</strong>而非像true 和 false这样<strong>值</strong>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, T v&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">integral_constant</span> &#123;</span><br><span class="line">  <span class="type">static</span> <span class="keyword">constexpr</span> T value = v;</span><br><span class="line">  <span class="keyword">using</span> value_type = T;</span><br><span class="line">  <span class="keyword">using</span> type = integral_constant; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> true_type = integral_constant&lt;<span class="type">bool</span>, <span class="literal">true</span>&gt;;</span><br><span class="line"><span class="keyword">using</span> false_type = integral_constant&lt;<span class="type">bool</span>, <span class="literal">false</span>&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>主要用途</p>
+<ul>
+<li><p>用于函数重载的参数placeholder</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="type">bool</span> val&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">  <span class="built_in">A</span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> (val) &#123;</span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;Int constructor\n&quot;</span>;</span><br><span class="line">      T data = <span class="number">10</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;String constructor\n&quot;</span>;</span><br><span class="line">      T data = <span class="string">&quot;string&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  A&lt;<span class="type">int</span>, <span class="literal">true</span>&gt; i;</span><br><span class="line">  A&lt;std::string, <span class="literal">false</span>&gt; str;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会出现编译错误，因为if 和 else 两个分支都会被编译。解决方法可以用 <code>if constexpr (val)</code> 来替代if语句。还可以用下面的方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="type">bool</span> val&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">  <span class="built_in">A</span>() &#123;</span><br><span class="line">    <span class="built_in">init</span>(<span class="built_in">integral_const</span>&lt;<span class="type">bool</span>, val&gt;());</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(std::true_type)</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(std::false_type)</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>用于其他bool 型模板的基类</p>
+<p>像STL中的<code>std::is_convertible</code> <code>std::is_class</code> …都可以进行值萃取: <code>is_xxx::value</code></p>
+</li>
+</ul>
+<h3 id="std-void-t"><a href="#std-void-t" class="headerlink" title="std::void_t"></a><code>std::void_t</code></h3><h3 id="std-conditional"><a href="#std-conditional" class="headerlink" title="std::conditional"></a><code>std::conditional</code></h3><p>根据第一个模板参数是否为true，决定使用类型T还是类型U。</p>
+<p>定义：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">bool</span> b, <span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">conditional</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">conditional</span>&lt;<span class="literal">false</span>, T, U&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = U;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  conditional&lt;<span class="literal">true</span>, <span class="type">int</span>, std::string&gt;::type i = <span class="number">10</span>;</span><br><span class="line">  conditional&lt;<span class="literal">false</span>, <span class="type">int</span>, std::string&gt;::type s = <span class="string">&quot;string&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="std-remove-all-extents"><a href="#std-remove-all-extents" class="headerlink" title="std::remove_all_extents"></a><code>std::remove_all_extents</code></h3><p>用途是去除数组的数组类型只保留元素类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> a[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  std::remove_all_extents&lt;<span class="keyword">decltype</span>(a)&gt;::type i = <span class="number">10</span>; <span class="comment">// int</span></span><br><span class="line">  std::cout &lt;&lt; i &lt;&lt; std::endl;</span><br><span class="line">  std::remove_all_extents&lt;std::string[<span class="number">10</span>][<span class="number">10</span>]&gt;::type s = <span class="string">&quot;hello&quot;</span>; <span class="comment">// string</span></span><br><span class="line">  std::cout &lt;&lt; s &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它的一种定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_all_extents</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_all_extents</span>&lt;T[N]&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = <span class="keyword">typename</span> remove_all_extents&lt;T&gt;::type;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_all_extents</span>&lt;T[]&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = <span class="keyword">typename</span> remove_all_extents&lt;T&gt;::type;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> a[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  remove_all_extents&lt;<span class="keyword">decltype</span>(a)&gt;::type i = <span class="number">10</span>; <span class="comment">// int</span></span><br><span class="line">  std::cout &lt;&lt; i &lt;&lt; std::endl;</span><br><span class="line">  remove_all_extents&lt;std::string[<span class="number">10</span>][<span class="number">10</span>]&gt;::type s = <span class="string">&quot;hello&quot;</span>; <span class="comment">// string</span></span><br><span class="line">  std::cout &lt;&lt; s &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="std-is-base-of-is-union-is-class"><a href="#std-is-base-of-is-union-is-class" class="headerlink" title="std::is_base_of is_union is_class"></a><code>std::is_base_of</code> <code>is_union</code> <code>is_class</code></h3><h3 id="is-copy-assignable"><a href="#is-copy-assignable" class="headerlink" title="is_copy_assignable"></a><code>is_copy_assignable</code></h3><p>其实也是展示<code>declval</code>的使用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U = std::<span class="type">void_t</span>&lt;&gt;&gt;</span><br><span class="line"><span class="keyword">struct</span> is_copy_assignable : <span class="keyword">public</span> std::false_type &#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_copy_assignable</span>&lt;T, std::<span class="type">void_t</span>&lt;<span class="keyword">decltype</span>(std::<span class="built_in">declval</span>&lt;T&amp;&gt;() = std::<span class="built_in">declval</span>&lt;<span class="type">const</span> T&amp;&gt;())&gt;&gt; : <span class="keyword">public</span> std::true_type &#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::conditional&lt;is_copy_assignable&lt;std::string&gt;::value, <span class="type">int</span>, std::string&gt;::type data;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">typeid</span>(data).<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="std-integer-sequence"><a href="#std-integer-sequence" class="headerlink" title="std::integer_sequence"></a><code>std::integer_sequence</code></h3><p>这篇文章很不错：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/679456805">https://zhuanlan.zhihu.com/p/679456805</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/abelian/p/6260951.html">https://www.cnblogs.com/abelian/p/6260951.html</a></p>
+</li>
+</ul>
+<h2 id="萃取技术"><a href="#萃取技术" class="headerlink" title="萃取技术"></a>萃取技术</h2><p>萃取有两种：</p>
+<ol>
+<li>类型萃取， 传入一种类型，返回另一种类型。形式是 <code>xxx::type</code></li>
+<li>值萃取，传入一种类型，返回一个值。形式是 <code>xxx::value</code></li>
+</ol>
+<h3 id="迭代器萃取"><a href="#迭代器萃取" class="headerlink" title="迭代器萃取"></a>迭代器萃取</h3><p>STL种有五种迭代器，每种迭代器都有一个tag表明它是哪一种</p>
+<ul>
+<li>输出迭代器：<code>struct output_iterator_tag</code></li>
+<li>输入迭代器：<code>struct input_iterator_tag</code></li>
+<li>前向迭代器：<code>struct forward_iterator_tag</code></li>
+<li>双向迭代器：<code>struct bidirectional_iterator_tag</code></li>
+<li>随机迭代器：<code>struct random_access_iterator_tag</code></li>
+</ul>
+<p>迭代器类型萃取如下，也就是利用了每种迭代器中的<code>iterator_category</code> 定义：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> It&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">display</span><span class="params">(It iterator)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">typename</span> iterator_traits&lt;It&gt;::iterator_category cat;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">typeid</span>(cat).<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>iterator_traits 的定义</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iter&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">iterator_traits</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> iterator_category = <span class="keyword">typename</span> Iter::iterator_category;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="获取容器内元素类型"><a href="#获取容器内元素类型" class="headerlink" title="获取容器内元素类型"></a>获取容器内元素类型</h3><p>STL中的容器一般都有<code>value_type</code>表示容器内部元素的类型，我们可以利用这个来实现我们的模板类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> C&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EleType</span> &#123;</span><br><span class="line">    <span class="keyword">using</span> type = <span class="keyword">typename</span> C::value_type;  </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// For array</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EleType</span>&lt;T[N]&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> a[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">typeid</span>(EleType&lt;<span class="keyword">decltype</span>(a)&gt;::type).<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="std-remove-reference"><a href="#std-remove-reference" class="headerlink" title="std::remove_reference"></a><code>std::remove_reference</code></h3><p>如果传入的是带引用的类型，这个模板类会把引用删除：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 泛化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_reference</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_reference</span>&lt;T&amp;&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_reference</span>&lt;T&amp;&amp;&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">  <span class="type">int</span> &amp;b = a;</span><br><span class="line">  <span class="keyword">decltype</span>(b) c = a;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;type of c is: &quot;</span> &lt;&lt; <span class="built_in">typeid</span>(c).<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">  </span><br><span class="line">  remove_reference&lt;<span class="keyword">decltype</span>(b)&gt;::type d = a;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;type of d is: &quot;</span> &lt;&lt; <span class="built_in">typeid</span>(d).<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::add_lvalue_reference</code> 和<code>std::add_rvalue_reference</code>用于向类型添加左值和右值引用。还有 <code>std::remove_const</code> 也是类似的实现。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_const</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">remove_const</span>&lt;<span class="type">const</span> T&gt; &#123;</span><br><span class="line">  <span class="keyword">using</span> type = T;</span><br><span class="line">&#125;;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="std-decay退化"><a href="#std-decay退化" class="headerlink" title="std::decay退化"></a><code>std::decay</code>退化</h3><p>退化就是</p>
+<ul>
+<li>把CVR去掉：可以继承 <code>std::remove_const, remove_reference</code> 来实现</li>
+<li>把数组，函数当作指针而非引用。这需要针对函数和数组进行模板的特化</li>
+</ul>
+<p>然后返回一个类型。</p>
+<h3 id="值萃取"><a href="#值萃取" class="headerlink" title="值萃取"></a>值萃取</h3><p>上面讲的都是类型萃取（传入一个类型，返回一类型），现在我们传入一个类型，返回一个值，这就是值萃取。</p>
+<p>STL 中的值萃取大部分都是这种形式：<code>std::is_xxx::value</code> 返回的都是bool</p>
+<h4 id="is-void"><a href="#is-void" class="headerlink" title="is_void"></a>is_void</h4><p>判断是不是void 类型</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_void</span> : std::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化</span></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_void</span>&lt;<span class="type">void</span>&gt; : std::true_type&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="is-same"><a href="#is-same" class="headerlink" title="is_same"></a>is_same</h4><p>判断两个类型是否相同</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_same</span> : std::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_same</span>&lt;T, T&gt; : std::true_type&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="is-default-constructible"><a href="#is-default-constructible" class="headerlink" title="is_default_constructible"></a>is_default_constructible</h4><p>SFINEA来啦，还记得吗？匹配失败的话编译器会退而求其次找别的模板，如果所有的模板都匹配失败，那才报错。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C++17</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> = std::<span class="type">void_t</span>&lt;&gt;&gt;</span><br><span class="line"><span class="keyword">struct</span> is_default_constructible : std::false_type&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_default_constructible</span>&lt;T, std::<span class="type">void_t</span>&lt;<span class="keyword">decltype</span>(<span class="built_in">T</span>())&gt;&gt; : std::true_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;<span class="built_in">A</span>(<span class="type">int</span> i) &#123;&#125;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; is_default_constructible&lt;std::string&gt;::value &lt;&lt; std::endl; <span class="comment">// 1</span></span><br><span class="line">  std::cout &lt;&lt; is_default_constructible&lt;A&gt;::value &lt;&lt; std::endl; <span class="comment">// 0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>还有别的实现方式，比如下面这个展示了模板中函数的运用，另外一种技巧</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_default_constructible_base</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> </span>= <span class="keyword">decltype</span>(<span class="built_in">T</span>())&gt;</span><br><span class="line">  <span class="function"><span class="type">static</span> std::true_type <span class="title">test</span><span class="params">(<span class="type">void</span>*)</span></span>; <span class="comment">// 无需实现，因为下面的delctype不需要实际调用</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> </span>= <span class="type">int</span>&gt;</span><br><span class="line">  <span class="function"><span class="type">static</span> std::false_type <span class="title">test</span><span class="params">(...)</span></span>;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  	<span class="keyword">using</span> type = <span class="keyword">decltype</span>(<span class="built_in">test</span>(<span class="literal">nullptr</span>));</span><br><span class="line">  <span class="keyword">using</span> value</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_default_constructible</span> : is_default_constructible_base&lt;T&gt;::type&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="is-convertible"><a href="#is-convertible" class="headerlink" title="is_convertible"></a>is_convertible</h4><p>判断能否将一个类型隐式地转换成另一个类型。</p>
+<p>沿用上面提到的使用成员函数的技巧。</p>
+<p>convertible就是可以把类型FROM直接赋值给类型TO，这里我们可以写一个函数，形参类型为TO，传入的实参类型为FROM</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> FROM, <span class="keyword">typename</span> TO&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_convertible_base</span> &#123;</span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">assign</span><span class="params">(TO)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> </span>= <span class="keyword">decltype</span>(<span class="built_in">assign</span>(std::<span class="built_in">declval</span>(FROM)))&gt;</span><br><span class="line">  <span class="function"><span class="type">static</span> std::true_type <span class="title">test</span><span class="params">(<span class="type">void</span>*)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> </span>= <span class="type">int</span>&gt;</span><br><span class="line">  <span class="function"><span class="type">static</span> std::false_type <span class="title">test</span><span class="params">(...)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">using</span> type = <span class="keyword">decltype</span>(<span class="built_in">test</span>(<span class="literal">nullptr</span>));</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> FROM, <span class="keyword">typename</span> TO&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_convertible</span> : is_convertible_base&lt;FROM, TO&gt;::type &#123;&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="is-base-of"><a href="#is-base-of" class="headerlink" title="is_base_of"></a>is_base_of</h4><p>判断一个类型是不是另一个类型的基类 <code>std::is_based_of&lt;Base, Derived&gt;</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Base, <span class="keyword">typename</span> Derived&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">is_base_of</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">	<span class="type">static</span> std::true_type <span class="title">test</span><span class="params">(T*)</span></span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>&gt;</span></span><br><span class="line"><span class="function">	<span class="type">static</span> std::false_type <span class="title">test</span><span class="params">(<span class="type">void</span>*)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> B, <span class="keyword">typename</span> D&gt;</span></span><br><span class="line"><span class="function">	<span class="type">static</span> <span class="keyword">auto</span> <span class="title">test_i</span><span class="params">()</span> -&gt; <span class="title">decltype</span><span class="params">(test&lt;B&gt;(<span class="keyword">static_cast</span>&lt;D*&gt;(<span class="literal">nullptr</span>)))</span></span>;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">bool</span> value = std::is_same&lt;</span><br><span class="line">		std::integral_constant&lt;<span class="type">bool</span>, </span><br><span class="line">			std::is_class_v&lt;Base&gt; &amp;&amp;</span><br><span class="line">			std::is_class_v&lt;Derived&gt; &amp;&amp;</span><br><span class="line">			<span class="keyword">decltype</span>(<span class="built_in">test_i</span>&lt;Base, Derived&gt;())::value&gt;,</span><br><span class="line">		std::integral_constant&lt;<span class="type">bool</span>, <span class="literal">true</span>&gt;&gt;::value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : A &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; is_base_of&lt;B, A&gt;::value &lt;&lt; std::endl; <span class="comment">// 0</span></span><br><span class="line">  std::cout &lt;&lt; is_base_of&lt;A, B&gt;::value &lt;&lt; std::endl; <span class="comment">// 1</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="算法萃取（策略模板）"><a href="#算法萃取（策略模板）" class="headerlink" title="算法萃取（策略模板）"></a>算法萃取（策略模板）</h2><p>传入一个类型，萃取出一个方法（策略）被别的类使用。</p>
+<p>这更像是一种静态的多态技术，根据模板参数的不同，执行不同的具体逻辑。这在排序中已经广泛使用：</p>
+<p><code>template&lt;typename RandomIter, typename Comp&gt; std::sort(RandomIter first, RandomIter end, Comp comp);</code></p>
+<p>这里的Comp 模板参数就像是一种比较策略，我们可以外部实现不同的比较策略传给sort，sort就会有不同的行为，比如 <code>std::less</code>， <code>std::greater</code></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C-%E6%A8%A1%E6%9D%BF/" rel="tag"># C++ 模板</a>
+              <a href="/tags/C-%E6%A8%A1%E6%9D%BF%E5%85%83%E7%BC%96%E7%A8%8B/" rel="tag"># C++ 模板元编程</a>
+              <a href="/tags/C-%E6%83%AF%E7%94%A8%E6%B3%95/" rel="tag"># C++ 惯用法</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/01/C-%E6%83%AF%E7%94%A8%E6%B3%95Idioms/" rel="prev" title="C++惯用法Idioms">
+                  <i class="fa fa-angle-left"></i> C++惯用法Idioms
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
