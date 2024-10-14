@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.21.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="元编程属于C++高级话题，目的是在编译期间进行计算，这样可以节省运行时的开销。 元函数 是元编程核心，元函数是在编译器见能够执行的函数，以前只有模板函数才能在编译期运行，但是随着C++的演进，引入了constexpr  const if也可以在编译器见进行运行，可以预见，未来的C++很可能会对元编程大大简化，不一定非得使用模板才能进行元编程。 元函数是一个宽泛的概念，不一定非得是一个函数，类模板也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++元编程">
+<meta property="og:url" content="http://example.com/2024/10/13/C-%E5%85%83%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="元编程属于C++高级话题，目的是在编译期间进行计算，这样可以节省运行时的开销。 元函数 是元编程核心，元函数是在编译器见能够执行的函数，以前只有模板函数才能在编译期运行，但是随着C++的演进，引入了constexpr  const if也可以在编译器见进行运行，可以预见，未来的C++很可能会对元编程大大简化，不一定非得使用模板才能进行元编程。 元函数是一个宽泛的概念，不一定非得是一个函数，类模板也">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-13T08:24:18.000Z">
+<meta property="article:modified_time" content="2024-10-14T05:31:55.496Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++模板">
+<meta property="article:tag" content="C++元编程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2024/10/13/C-%E5%85%83%E7%BC%96%E7%A8%8B/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2024/10/13/C-%E5%85%83%E7%BC%96%E7%A8%8B/","path":"2024/10/13/C-元编程/","title":"C++元编程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++元编程 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E5%90%88%E5%85%83%E7%BC%96%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">混合元编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inline-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="nav-number">2.</span> <span class="nav-text">inline 静态成员变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-tuple"><span class="nav-number">3.</span> <span class="nav-text">std::tuple</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/13/C-%E5%85%83%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++元编程 | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++元编程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-13 16:24:18" itemprop="dateCreated datePublished" datetime="2024-10-13T16:24:18+08:00">2024-10-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2024-10-14 13:31:55" itemprop="dateModified" datetime="2024-10-14T13:31:55+08:00">2024-10-14</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>元编程属于C++高级话题，目的是在编译期间进行计算，这样可以节省运行时的开销。</p>
+<p><strong>元函数</strong> 是元编程核心，元函数是在编译器见能够执行的函数，以前只有模板函数才能在编译期运行，但是随着C++的演进，引入了<code>constexpr</code>  <code>const if</code>也可以在编译器见进行运行，可以预见，未来的C++很可能会对元编程大大简化，不一定非得使用模板才能进行元编程。</p>
+<p>元函数是一个宽泛的概念，不一定非得是一个函数，类模板也可以作为元函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> x, <span class="type">int</span> y&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">sum</span> &#123;</span><br><span class="line">  <span class="keyword">enum</span> &#123;</span><br><span class="line">    value = x + y</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">const</span> <span class="type">int</span>&amp; val)</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; val &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">print</span>(sum&lt;<span class="number">10</span>, <span class="number">20</span>&gt;::value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大家知道enum 就是一个常量，不会为其分配内存，特别好！</p>
+<p>用<code>constexpr</code>当然也可以实现上面的效果，但是由于print 函数的参数为一个引用，编译器认为可以为其取地址，所以用constexpr 可能会导致额外的内存分配，不完美。</p>
+<p>下面介绍常见的一个例子：数值的阶乘，这里我们使用了 constexpr 来实现，当然用模板也可以，但是代码更多更复杂一些，这就是现代C++的魅力：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="type">int</span> <span class="title">Factorial</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> n &lt;= <span class="number">1</span> ? <span class="number">1</span> : n * <span class="built_in">Factorial</span>(n<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不使用函数也可以</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> N&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> result = N * result&lt;N<span class="number">-1</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> result&lt;<span class="number">0</span>&gt; = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="混合元编程"><a href="#混合元编程" class="headerlink" title="混合元编程"></a>混合元编程</h2><p>写一段代码，编译器根据这段代码生成新的代码（其实就是不断的进行模板实例化只不过参数不同），实际的计算在生成的代码中，编译器编译生成的代码，产生可执行程序。很像代码生成器！</p>
+<p>具体原理上其实就是利用编译器对模板进行递归的展开并实例化。既然会展开，有可能会引入代码膨胀的问题，也就是用不到的代码被实例化了，比如下面这个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> x, <span class="type">int</span> y&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = x &gt; y ? Test&lt;x<span class="number">-1</span>, y&gt;::value : Test&lt;x, x&gt;::value; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归结束</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> x&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Test</span>&lt;x, x&gt; &#123;</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = Test&lt;<span class="number">6</span>, <span class="number">4</span>&gt;::value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上述代码经过展开，实例化的模板可以在这里看到： https://cppinsights.io/s/6c48dbe6</span></span><br></pre></td></tr></table></figure>
+
+<p>上面这个例子会实例化好多Test 实例，有一些是用不到的，比如 Test&lt;6,6&gt;, Test&lt;5,5&gt;. 那为什么会生成用不到的模板实例呢，问题的关键在于<strong>条件运算符</strong>，我们必须加手段替换掉条件运算符, <strong><code>std::conditional</code></strong> 就是编译期的条件运算符</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> x, <span class="type">int</span> y&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> RealType = <span class="keyword">typename</span> std::conditional&lt;(x &gt; y),</span><br><span class="line">  									        Test&lt;x<span class="number">-1</span>, y&gt;,</span><br><span class="line">  									        Test&lt;x, x&gt;&gt;::type;</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = RealType::value; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归结束</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> x&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Test</span>&lt;x, x&gt; &#123;</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> value = x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = Test&lt;<span class="number">6</span>, <span class="number">4</span>&gt;::value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上面的代码只实例化了Test&lt;6,4&gt; Test&lt;5,4&gt; Test&lt;4,4&gt;: https://cppinsights.io/s/565c6f90</span></span><br></pre></td></tr></table></figure>
+
+<p>Bravo! But not perfect. 因为每一个Test 实例都会给value分配内存，我们只是想要一个常量值，说到这里，大家想起来了吗，用 <strong>enum</strong>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// static const int value = RealType::value;</span></span><br><span class="line"><span class="keyword">enum</span> &#123;</span><br><span class="line">  value = RealType::value</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>至此才算完美！</p>
+<h2 id="inline-静态成员变量"><a href="#inline-静态成员变量" class="headerlink" title="inline 静态成员变量"></a>inline 静态成员变量</h2><p>很久以前，inline只能修饰函数。同时静态成员变量只能在头文件中进行生命，在<strong>一个</strong>元文件中进行定义，如果多个cpp文件都定义，那就是重复定义，链接错误！</p>
+<p>后来C++11来了，允许我们对static 成员变量就地初始化，但是有一些限制条件</p>
+<ol>
+<li>必须是整型数据（int, char, enum）</li>
+<li>必须有const修饰 <code>static const int mem = 10</code></li>
+</ol>
+<p>这其实会让编译器为这个成员分配内存，积食你不用它，有点not perfect。</p>
+<p>再到后来C++17 引入了<code>inline</code> 静态成员变量，去掉了C++11的两个限制条件，而且对<code>constexpr</code>做了扩展，自动为inline的。也就是不用指定<code>inline</code>关健字了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">float</span> mem = <span class="number">10.0</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="std-tuple"><a href="#std-tuple" class="headerlink" title="std::tuple"></a>std::tuple</h2><p>我们用这个例子作为这一系列文章的结束。</p>
+<p>我们考虑一下tuple的使用，<code>std::tuple&lt;int, double, string&gt; t&#123;1, 1.0, &quot;1&quot;&#125;;</code>模板参数是任意个类型，构造函数接收相应的初始化值。我们可以想到基本的定义如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>&lt;First, Others...&gt; : <span class="keyword">private</span> tuple&lt;Others...&gt; &#123; <span class="comment">// 参数展开，很熟悉吧</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> C_First, <span class="keyword">typename</span>... C_Others&gt;</span></span><br><span class="line"><span class="function">  <span class="title">tuple</span><span class="params">(C_First&amp;&amp; f, C_Others&amp;&amp;... others)</span> :</span></span><br><span class="line"><span class="function">  	tuple&lt;Others...&gt;(std::forward&lt;C_Others&gt;(others)...),</span></span><br><span class="line"><span class="function">  	data(std::forward&lt;C_First&gt;(f)) &#123;</span></span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;data = &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function">First <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  First data;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>&lt;&gt; &#123;</span><br><span class="line">  <span class="built_in">tuple</span>() &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;empty\n&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">tuple&lt;<span class="type">int</span>, <span class="type">double</span>&gt; <span class="title">t</span><span class="params">(<span class="number">1</span>, <span class="number">2.0</span>)</span></span>; <span class="comment">// empty =&gt; 2.0 ==&gt; 1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们还需要定义一个访问函数<code>get&lt;&gt;(...)</code>， 由于这个函数需要访问每一个基类的成员，其实也是递归的，但是由于函数不能进行偏特化，我们只能借助一个辅助类，完整的代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>&lt;First, Others...&gt; : <span class="keyword">private</span> tuple&lt;Others...&gt; &#123; <span class="comment">// 参数展开，很熟悉吧</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> C_First, <span class="keyword">typename</span>... C_Others&gt;</span></span><br><span class="line"><span class="function">  <span class="title">tuple</span><span class="params">(C_First&amp;&amp; f, C_Others&amp;&amp;... others)</span> :</span></span><br><span class="line"><span class="function">  	tuple&lt;Others...&gt;(std::forward&lt;C_Others&gt;(others)...),</span></span><br><span class="line"><span class="function">  	data(std::forward&lt;C_First&gt;(f)) &#123;</span></span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;data = &quot;</span> &lt;&lt; data &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function">First <span class="title">get</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  First data;</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">template</span>&lt;<span class="type">int</span>&gt; <span class="keyword">friend</span> <span class="keyword">struct</span> <span class="title class_">getter</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">tuple</span>&lt;&gt; &#123;</span><br><span class="line">  <span class="built_in">tuple</span>() &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;empty\n&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="type">int</span> i&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">getter</span> &#123;</span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span></span><br><span class="line"><span class="function">	<span class="type">static</span> <span class="keyword">auto</span> <span class="title">get</span><span class="params">(<span class="type">const</span> tuple&lt;First, Others...&gt;&amp; t)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> getter&lt;i<span class="number">-1</span>&gt;::<span class="built_in">get</span>(<span class="keyword">static_cast</span>&lt;<span class="type">const</span> tuple&lt;Others...&gt;&amp;&gt;(t));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">getter</span>&lt;<span class="number">0</span>&gt; &#123;</span><br><span class="line">	<span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</span></span><br><span class="line"><span class="function">	<span class="type">static</span> <span class="keyword">auto</span> <span class="title">get</span><span class="params">(<span class="type">const</span> tuple&lt;First, Others...&gt;&amp; t)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> t.<span class="built_in">get</span>();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="type">int</span> i, <span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">get</span><span class="params">(<span class="type">const</span> tuple&lt;Types...&gt;&amp; t)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> getter&lt;i&gt;::<span class="built_in">get</span>(t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">tuple&lt;<span class="type">int</span>, <span class="type">double</span>, std::string&gt; <span class="title">t</span><span class="params">(<span class="number">1</span>, <span class="number">2.0</span>, <span class="string">&quot;awsome&quot;</span>)</span></span>;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(t) &lt;&lt; std::endl;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(t) &lt;&lt; std::endl;</span><br><span class="line">  std::cout &lt;&lt; <span class="built_in">get</span>&lt;<span class="number">2</span>&gt;(t) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>目前为止，基本完成了，但是还不能支持拷贝复制，我们需要定义copy构造函数和赋值操作符，这里就不细说了，唯一要注意的是，谨防 我们定义的copy函数模板不能被调用到，可以参考之前的文章，用到了<code>std::enable_if</code>利用SFINAE规则来解决这个问题。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C-%E6%A8%A1%E6%9D%BF/" rel="tag"># C++模板</a>
+              <a href="/tags/C-%E5%85%83%E7%BC%96%E7%A8%8B/" rel="tag"># C++元编程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/03/C-STL%E5%B8%B8%E7%94%A8%E6%A8%A1%E6%9D%BF/" rel="prev" title="STL中的常用模板">
+                  <i class="fa fa-angle-left"></i> STL中的常用模板
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
